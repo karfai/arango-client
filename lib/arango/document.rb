@@ -5,14 +5,22 @@ require 'active_support/core_ext/hash'
 module Arango
   class Document
     include Builder
-    
-    def initialize(path)
-      @conn = build_raw_connection(path)
+
+    def initialize(opts)
+      @conn = build_raw_connection(opts[:path]) if opts.key?(:path)
+      @content = opts.fetch(:content, nil)
     end
 
     def content
+      @content ||= load
+      @content.except('_key', '_id', '_rev')
+    end
+
+    private
+
+    def load
       resp = @conn.get
-      resp.body.except('_key', '_id', '_rev') 
+      resp.body
     end
   end
 end
