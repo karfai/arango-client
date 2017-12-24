@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    arango-client (0.0.1)
+    arango-client (0.0.3)
       activesupport
       faraday
       faraday_middleware
