@@ -11,6 +11,11 @@ module Arango
       @cache || gather
     end
 
+    def add(content)
+      resp = @conn.post("document/#{@info['name']}", content)
+      Document.new(resp.headers['location'])
+    end
+
     private
 
     def gather
