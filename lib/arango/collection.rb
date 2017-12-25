@@ -13,7 +13,7 @@ module Arango
 
     def add(content)
       resp = @conn.post("document/#{@info['name']}", content)
-      Document.new(resp.headers['location'])
+      Document.new(path: resp.headers['location'])
     end
 
     def by_example(o)
