@@ -5,13 +5,13 @@ module Arango
   class DB
     include Builder
     
-    def initialize(name)
-      @conn = build_connection(name)
-      @name = name
+    def initialize(name, opts)
+      @conn = build_connection(opts.merge(db: name))
+      @opts = opts
     end
 
     def collections
-      Collections.new(@conn)
+      Collections.new(@conn, @opts)
     end
   end
 end

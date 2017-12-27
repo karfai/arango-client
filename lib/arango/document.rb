@@ -7,7 +7,7 @@ module Arango
     include Builder
 
     def initialize(opts)
-      @conn = build_raw_connection(opts[:path]) if opts.key?(:path)
+      @conn = build_connection(opts)
       @content = opts.fetch(:content, nil)
     end
 

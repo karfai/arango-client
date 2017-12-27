@@ -2,8 +2,9 @@ require_relative './db'
 
 module Arango
   class DBs
-    def initialize(conn)
+    def initialize(conn, opts)
       @conn = conn
+      @opts = opts
     end
 
     def exists?(name)
@@ -20,7 +21,7 @@ module Arango
 
     def create(name)
       resp = @conn.post('database', name: name)
-      DB.new(name)
+      DB.new(name, @opts)
     end
     
     def [](name)
@@ -35,8 +36,9 @@ module Arango
 
     def gather
       resp = @conn.get('database/user')
+      p resp
       resp.body['result'].inject({}) do |o, n|
-        o.merge(n => DB.new(n))
+        o.merge(n => DB.new(n, @opts))
       end
     end
   end

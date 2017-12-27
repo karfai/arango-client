@@ -2,8 +2,9 @@ require_relative './collection'
 
 module Arango
   class Collections
-    def initialize(conn)
+    def initialize(conn, opts)
       @conn = conn
+      @opts = opts
     end
 
     def exists?(name)
@@ -34,7 +35,7 @@ module Arango
     def gather
       resp = @conn.get('collection')
       resp.body['result'].inject({}) do |o, c|
-        o.merge(c['name'] => Collection.new(@conn, c))
+        o.merge(c['name'] => Collection.new(@conn, c, @opts))
       end
     end
   end

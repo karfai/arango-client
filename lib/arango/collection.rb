@@ -2,9 +2,10 @@ require_relative './document'
 
 module Arango
   class Collection
-    def initialize(conn, info)
+    def initialize(conn, info, opts)
       @conn = conn
       @info = info
+      @opts = opts
     end
 
     def documents
@@ -13,13 +14,13 @@ module Arango
 
     def add(content)
       resp = @conn.post("document/#{@info['name']}", content)
-      Document.new(path: resp.headers['location'])
+      Document.new(@opts.merge(path: resp.headers['location']))
     end
 
     def by_example(o)
       resp = @conn.put('simple/by-example', { collection: @info['name'], example: o })
       resp.body['result'].map do |res|
-        Document.new(content: res, path: "#{@conn.url_prefix.path}/#{res['_key']}")
+        Document.new(@opts.merge(content: res, path: "#{@conn.url_prefix.path}/#{res['_key']}"))
       end
     end
 
@@ -27,7 +28,7 @@ module Arango
 
     def gather
       resp = @conn.put('simple/all-keys', collection: @info['name'], type: 'path')
-      resp.body['result'].map { |path| Document.new(path: path) }
+      resp.body['result'].map { |path| Document.new(@opts.merge(path: path)) }
     end
   end
 end
